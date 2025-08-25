@@ -24,7 +24,7 @@
             <c:forEach var = "board" items="${boards}">
                 <tr>
                     <td class="no">${board.bno}</td>
-                    <td><a href="">${board.title}</a></td>
+                    <td><a href="/ch2/board/${board.bno}">${board.title}</a></td>
                     <td>${board.writer}</td>
                     <td><fmt:formatDate value="${board.reg_date}" pattern="yyyy-MM-dd"/></td>
                     <td class="viewcnt">${board.view_cnt}</td>
@@ -41,7 +41,7 @@
             </c:forEach>
         </div>
         <br>
-        <button id="writeBtn" class="btn-write" onclick="location.href='/board/write'"><i class="fa fa-pencil"></i> 글쓰기</button>
+        <button id="writeBtn" class="btn-write" onclick="location.href='/ch2/board/write'"><i class="fa fa-pencil"></i> 글쓰기</button>
     </div>
 </div>
 </body>

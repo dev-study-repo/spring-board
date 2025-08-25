@@ -3,16 +3,17 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fastcampus.ch2.mapper.BoardMapper">
     <sql id="selectFromBoard">
-        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date, up_date
         FROM board
     </sql>
 
+    <!-- 상세 조회 -->
     <select id="select" parameterType="int" resultType="BoardDto">
         <include refid="selectFromBoard"/>
         WHERE bno = #{bno}
     </select>
 
-    <!-- list -->
+    <!-- 전체 조회 -->
     <select id="selectAll" resultType="BoardDto">
         <include refid="selectFromBoard"/>
         ORDER BY reg_date DESC, bno DESC
@@ -25,9 +26,20 @@
         LIMIT #{offset}, #{pageSize}
     </select>
 
+    <!-- 전체 게시판 수 조회 -->
     <select id="count" resultType="int">
         SELECT count(*) FROM board
     </select>
+
+    <!-- 게시글 작성 -->
+    <insert id="insert" parameterType="BoardDto">
+        INSERT INTO board
+            (title, content, writer)
+        VALUES
+            (#{title}, #{content}, #{writer})
+    </insert>
+
+
 
     <delete id="deleteAll">
         DELETE FROM board
@@ -37,12 +49,7 @@
         DELETE FROM board WHERE bno = #{bno} and writer = #{writer}
     </delete>
 
-    <insert id="insert" parameterType="BoardDto">
-        INSERT INTO board
-            (title, content, writer)
-        VALUES
-            (#{title}, #{content}, #{writer})
-    </insert>
+
 
     <update id="update" parameterType="BoardDto">
         UPDATE board

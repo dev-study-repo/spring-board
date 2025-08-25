@@ -6,6 +6,8 @@
 	 	SELECT id, pwd, name, email, birth, sns, reg_date
 	 	FROM user_info
      </sql>
+
+	<!-- 유저 조회 -->
      <select id="selectById" parameterType="string" resultType="UserDTO">
      	<include refid="selectFromUser"/>
      	WHERE id = #{id}

@@ -9,8 +9,9 @@ public interface BoardDao {
     List<BoardDto> selectAll() throws Exception; //게시글 전체 불러오기
     List<BoardDto> selectPage(Map<String,Integer> map) throws Exception; //게시글 페이징
     int count() throws Exception; //전체 게시글 수
-//    int delete(Integer bno, String writer) throws Exception;
-//    int insert(BoardDto dto) throws Exception;
+    int insert(BoardDto dto) throws Exception; //게시글 작성
+
+    //    int delete(Integer bno, String writer) throws Exception;
 //    int update(BoardDto dto) throws Exception;
 //    int increaseViewCnt(Integer bno) throws Exception;
 

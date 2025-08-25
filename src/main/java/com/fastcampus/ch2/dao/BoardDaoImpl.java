@@ -14,7 +14,7 @@ public class BoardDaoImpl implements BoardDao {
     private SqlSessionTemplate session;
     private static String namespace = "com.fastcampus.ch2.mapper.BoardMapper.";
 
-    @Override //게시글 조회
+    @Override //게시글 상세 조회
     public BoardDto select(Integer bno) throws Exception {
         return session.selectOne(namespace + "select", bno);
     } // T selectOne(String statement, Object parameter)
@@ -34,6 +34,11 @@ public class BoardDaoImpl implements BoardDao {
         return session.selectOne(namespace+"count");
     } // T selectOne(String statement)
 
+    @Override //게시글 작성
+    public int insert(BoardDto dto) throws Exception {
+        return session.insert(namespace+"insert", dto);
+    } // int insert(String statement, Object parameter)
+
 //    @Override
 //    public int deleteAll() {
 //        return session.delete(namespace+"deleteAll");
@@ -47,10 +52,6 @@ public class BoardDaoImpl implements BoardDao {
 //        return session.delete(namespace+"delete", map);
 //    } // int delete(String statement, Object parameter)
 //
-//    @Override
-//    public int insert(BoardDto dto) throws Exception {
-//        return session.insert(namespace+"insert", dto);
-//    } // int insert(String statement, Object parameter)
 //
 //
 //    @Override
