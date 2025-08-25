@@ -2,6 +2,7 @@ package com.fastcampus.ch2.dao;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.fastcampus.ch2.domain.UserDto;

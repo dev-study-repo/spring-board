@@ -3,7 +3,6 @@ package com.fastcampus.ch2;
 import org.junit.*;
 import org.springframework.context.*;
 import org.springframework.context.support.*;
-import org.springframework.jdbc.datasource.*;
 
 import javax.sql.*;
 import java.sql.*;

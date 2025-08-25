@@ -1,6 +1,8 @@
 * { box-sizing:border-box; }
 a { text-decoration: none; }
-
+body{
+    padding-top: 100px;
+}
 form {
     width:400px;
     height:500px;

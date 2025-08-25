@@ -13,52 +13,55 @@ public class BoardDaoImpl implements BoardDao {
     @Autowired
     private SqlSessionTemplate session;
     private static String namespace = "com.fastcampus.ch2.mapper.BoardMapper.";
-    
+
+    @Override //게시글 조회
     public BoardDto select(Integer bno) throws Exception {
         return session.selectOne(namespace + "select", bno);
     } // T selectOne(String statement, Object parameter)
 
-    public int count() throws Exception {
-        return session.selectOne(namespace+"count");
-    } // T selectOne(String statement)
-
-    @Override
-    public int deleteAll() {
-        return session.delete(namespace+"deleteAll");
-    } // int delete(String statement)
-
-    @Override
-    public int delete(Integer bno, String writer) throws Exception {
-        Map map = new HashMap();
-        map.put("bno", bno);
-        map.put("writer", writer);
-        return session.delete(namespace+"delete", map);
-    } // int delete(String statement, Object parameter)
-
-    public int insert(BoardDto dto) throws Exception {
-        return session.insert(namespace+"insert", dto);
-    } // int insert(String statement, Object parameter)
-
-    @Override
+    @Override //전체 게시글 조회
     public List<BoardDto> selectAll() throws Exception {
         return session.selectList(namespace+"selectAll");
     } // List<E> selectList(String statement)
 
-
-    @Override
-    public List<BoardDto> selectPage(Map map) throws Exception {
+    @Override //전체 게시글 조회(페이지 단위)
+    public List<BoardDto> selectPage(Map<String,Integer> map) throws Exception {
         return session.selectList(namespace+"selectPage", map);
     } // List<E> selectList(String statement, Object parameter)
 
-    @Override
-    public int update(BoardDto dto) throws Exception {
-        return session.update(namespace+"update", dto);
-    } // int update(String statement, Object parameter)
+    @Override //전체 게시글 수
+    public int count() throws Exception {
+        return session.selectOne(namespace+"count");
+    } // T selectOne(String statement)
 
-    @Override
-    public int increaseViewCnt(Integer bno) throws Exception {
-        return session.update(namespace+"increaseViewCnt", bno);
-    } // int update(String statement, Object parameter)
+//    @Override
+//    public int deleteAll() {
+//        return session.delete(namespace+"deleteAll");
+//    } // int delete(String statement)
+//
+//    @Override
+//    public int delete(Integer bno, String writer) throws Exception {
+//        Map map = new HashMap();
+//        map.put("bno", bno);
+//        map.put("writer", writer);
+//        return session.delete(namespace+"delete", map);
+//    } // int delete(String statement, Object parameter)
+//
+//    @Override
+//    public int insert(BoardDto dto) throws Exception {
+//        return session.insert(namespace+"insert", dto);
+//    } // int insert(String statement, Object parameter)
+//
+//
+//    @Override
+//    public int update(BoardDto dto) throws Exception {
+//        return session.update(namespace+"update", dto);
+//    } // int update(String statement, Object parameter)
+//
+//    @Override
+//    public int increaseViewCnt(Integer bno) throws Exception {
+//        return session.update(namespace+"increaseViewCnt", bno);
+//    } // int update(String statement, Object parameter)
 
 //    @Override
 //    public int searchResultCnt(SearchCondition sc) throws Exception {

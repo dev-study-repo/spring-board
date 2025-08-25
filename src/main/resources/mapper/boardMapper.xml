@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.fastcampus.ch2.dao.BoardMapper">
+<mapper namespace="com.fastcampus.ch2.mapper.BoardMapper">
+    <sql id="selectFromBoard">
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM board
+    </sql>
+
+    <select id="select" parameterType="int" resultType="BoardDto">
+        <include refid="selectFromBoard"/>
+        WHERE bno = #{bno}
+    </select>
+
+    <!-- list -->
+    <select id="selectAll" resultType="BoardDto">
+        <include refid="selectFromBoard"/>
+        ORDER BY reg_date DESC, bno DESC
+    </select>
+
+    <!-- page -->
+    <select id="selectPage" parameterType="map" resultType="BoardDto">
+        <include refid="selectFromBoard"/>
+        ORDER BY reg_date DESC, bno DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
     <select id="count" resultType="int">
         SELECT count(*) FROM board
     </select>
@@ -20,28 +43,6 @@
         VALUES
             (#{title}, #{content}, #{writer})
     </insert>
-
-    <select id="selectAll" resultType="BoardDto">
-        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
-        FROM board
-        ORDER BY reg_date DESC, bno DESC
-    </select>
-
-    <sql id="selectFromBoard">
-        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
-        FROM board
-    </sql>
-
-    <select id="select" parameterType="int" resultType="BoardDto">
-        <include refid="selectFromBoard"/>
-        WHERE bno = #{bno}
-    </select>
-
-    <select id="selectPage" parameterType="map" resultType="BoardDto">
-        <include refid="selectFromBoard"/>
-        ORDER BY reg_date DESC, bno DESC
-        LIMIT #{offset}, #{pageSize}
-    </select>
 
     <update id="update" parameterType="BoardDto">
         UPDATE board

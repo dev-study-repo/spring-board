@@ -24,7 +24,8 @@ public class BoardDaoImplTest {
     	BoardDto boardDto = boardDao.select(1);
     	System.out.print(boardDto);
     	assertTrue(boardDto.getBno().equals(1));
-    	
+        List<BoardDto> boardDtoList = boardDao.selectAll();
+        System.out.print(boardDtoList);
     }
 
 //    @Test
@@ -98,24 +99,7 @@ public class BoardDaoImplTest {
 //        assertTrue(boardDao.count()==1);
 //    }
 //
-//    @Test
-//    public void selectAllTest() throws Exception {
-//        boardDao.deleteAll();
-//        assertTrue(boardDao.count()==0);
-//
-//        List<BoardDto> list = boardDao.selectAll();
-//        assertTrue(list.size() == 0);
-//
-//        BoardDto boardDto = new BoardDto("no title", "no content", "asdf");
-//        assertTrue(boardDao.insert(boardDto)==1);
-//
-//        list = boardDao.selectAll();
-//        assertTrue(list.size() == 1);
-//
-//        assertTrue(boardDao.insert(boardDto)==1);
-//        list = boardDao.selectAll();
-//        assertTrue(list.size() == 2);
-//    }
+
 //
 //    @Test
 //    public void selectTest() throws Exception {
