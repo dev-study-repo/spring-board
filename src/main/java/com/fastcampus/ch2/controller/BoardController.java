@@ -1,8 +1,12 @@
 package com.fastcampus.ch2.controller;
 
 import com.fastcampus.ch2.domain.BoardDto;
+import com.fastcampus.ch2.domain.UserDto;
 import com.fastcampus.ch2.service.BoardService;
+import com.fastcampus.ch2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +19,9 @@ import java.util.Map;
 public class BoardController {
     @Autowired
     private BoardService boardService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/list") //게시글 전체 조회
     public String list(@RequestParam(defaultValue = "1") int page, Model model) throws Exception {
@@ -42,15 +49,20 @@ public class BoardController {
     public String writeForm() {
         return "boardWrite";
     }
-    @PostMapping("/write") //게시글 작성
-    public String writeBoard(String title, String content, HttpSession session) throws Exception {
-        BoardDto board = new BoardDto();
-        board.setTitle(title);
-        board.setContent(content);
-        String writer = session.getAttribute("id").toString();
-        board.setWriter(writer);
-        boardService.insertBoard(board);
-        return "redirect:/board/list";
+    @PostMapping(value = "/write", produces = "text/plain;charset=UTF-8") //게시글 작성
+    public ResponseEntity<String> writeBoard(@RequestBody BoardDto boardDto, HttpSession session) throws Exception {
+        try {
+            BoardDto board = new BoardDto();
+            board.setTitle(boardDto.getTitle());
+            board.setContent(boardDto.getContent());
+            board.setWriter(boardDto.getWriter());
+
+            boardService.insertBoard(board);
+            return ResponseEntity.ok("게시글 등록이 완료되었습니다.");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("게시글 작성 중 오류가 발생햇습니다.");
+        }
     }
 
     @GetMapping("/modify/{bno}") //게시글 수정 페이지
@@ -60,4 +72,14 @@ public class BoardController {
         return "boardModify";
     }
 
+    @PostMapping(value = "/remove/{bno}", produces = "text/plain;charset=UTF-8") //게시글 삭제
+    public ResponseEntity<String> removeBoard(@PathVariable int bno) throws Exception {
+        try {
+            boardService.deleteBoard(bno);
+            return ResponseEntity.ok("삭제되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("삭제 중 오류가 발생했습니다.");
+        }
+    }
 }

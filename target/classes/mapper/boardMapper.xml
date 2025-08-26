@@ -39,15 +39,17 @@
             (#{title}, #{content}, #{writer})
     </insert>
 
+    <!-- 게시글 삭제 -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM board WHERE bno = #{bno}
+    </delete>
 
 
     <delete id="deleteAll">
         DELETE FROM board
     </delete>
 
-    <delete id="delete" parameterType="map">
-        DELETE FROM board WHERE bno = #{bno} and writer = #{writer}
-    </delete>
+
 
 
 

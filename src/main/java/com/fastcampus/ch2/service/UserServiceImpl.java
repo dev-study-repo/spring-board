@@ -10,6 +10,8 @@ import com.fastcampus.ch2.domain.UserDto;
 public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserDao userDao;
+    @Autowired
+    private UserService userService;
 
 	@Override
 	public boolean login(String id, String pwd) {
@@ -20,6 +22,11 @@ public class UserServiceImpl implements UserService {
 		System.err.println("로그인 중 예외 발생: " + e.getMessage());
         return false;
 	}
+	}
+
+	@Override
+	public UserDto getUserById(String id) throws Exception {
+		return userDao.selectById(id);
 	}
 
 }

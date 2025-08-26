@@ -39,6 +39,11 @@ public class BoardDaoImpl implements BoardDao {
         return session.insert(namespace+"insert", dto);
     } // int insert(String statement, Object parameter)
 
+    @Override //게시글 삭제
+    public int delete(Integer bno) throws Exception {
+        return session.delete(namespace+"delete", bno);
+    }
+
 //    @Override
 //    public int deleteAll() {
 //        return session.delete(namespace+"deleteAll");

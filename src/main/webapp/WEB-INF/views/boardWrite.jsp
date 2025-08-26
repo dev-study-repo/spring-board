@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page session="true" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -33,9 +33,9 @@
 <div class="container">
     <h2>게시글 작성</h2>
     <form id="form" class="frm" method="post" accept-charset="UTF-8">
-        <input type="hidden" name="user" value="${user.id}">
-        <input type="text" name="title" placeholder="제목을 입력해 주세요.">
-        <textarea name="content" placeholder="내용을 입력해 주세요."></textarea>
+        <input type="hidden" name="writer" id="writer" value="${sessionScope.id}">
+        <input type="text" name="title" id="title" placeholder="제목을 입력해 주세요.">
+        <textarea name="content" id="content" placeholder="내용을 입력해 주세요."></textarea>
 
         <div class="btn-group">
             <button type="button" id="writeBtn" class="btn"><i class="fa fa-pencil"></i> 등록</button>
@@ -52,11 +52,38 @@
         return true;
     }
 
+    <%--$("#writeBtn").on("click", function(){--%>
+    <%--    const form = $("#form");--%>
+    <%--    form.attr("action", "${pageContext.request.contextPath}/board/write");--%>
+    <%--    form.attr("method", "post");--%>
+    <%--    if(formCheck()) form.submit();--%>
+    <%--});--%>
     $("#writeBtn").on("click", function(){
-        const form = $("#form");
-        form.attr("action", "${pageContext.request.contextPath}/board/write");
-        form.attr("method", "post");
-        if(formCheck()) form.submit();
+        if (!formCheck()) return; // 유효성 검사
+        const writer = $("#writer").val();
+        if (writer === ""){
+            alert("로그인이 필요합니다");
+            location.href = "${pageContext.request.contextPath}/board/list";
+            return;
+        }
+        const data = {
+            title: $("#title").val(),
+            content: $("#content").val(),
+            writer: writer
+        };
+        if(formCheck()){
+            $.ajax({
+                type:'POST',
+                url: 'write',
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=UTF-8',
+                success: function (msg){
+                    alert(msg);
+                    location.href = "${pageContext.request.contextPath}/board/list";
+                },
+                error: function (err){ alert(err);}
+            })
+        }
     });
 
     $("#listBtn").on("click", function(){

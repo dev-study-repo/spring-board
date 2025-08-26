@@ -58,7 +58,7 @@ public class UserController {
 //			model.addAttribute("id", id );
 //			model.addAttribute("pwd", pwd );
 			
-			return "userInfo";
+			return "redirect:/board/list";
 		}
 		return "loginForm";
 	}

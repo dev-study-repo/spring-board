@@ -11,4 +11,5 @@ public interface BoardService {
     Map<String, Object> getBoardPage(int page, int pageSize) throws Exception; //전체 게시글 조회 - 페이지
     int countAllBoards() throws Exception; //전체 게시글 수
     int insertBoard(BoardDto boardDto) throws Exception; //게시글 작성
+    int deleteBoard(int bno) throws Exception; //게시글 삭제
 }

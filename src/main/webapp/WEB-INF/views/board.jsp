@@ -37,7 +37,16 @@
 <script>
     $("#removeBtn").on("click", function(){
         if(!confirm("정말 삭제하시겠습니까?")) return;
-        location.href = "${pageContext.request.contextPath}/board/remove?bno=${board.bno}";
+        <%--location.href = "${pageContext.request.contextPath}/board/remove/${board.bno}";--%>
+        $.ajax({
+            type:'POST',
+            url: 'remove/${board.bno}',
+            success: function(msg){
+                alert(msg);
+                location.href = "${pageContext.request.contextPath}/board/list";
+            },
+            error: function(err){ alert(err); }
+        });
     });
 
     $("#modifyBtn").on("click", function(){
