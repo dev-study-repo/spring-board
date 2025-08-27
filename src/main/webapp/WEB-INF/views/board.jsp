@@ -50,41 +50,7 @@
     const bno = "${board.bno}";
     const sessionId = "${sessionScope.id}";
 
-    // 댓글 불러오기
-    function loadComments() {
-        $.ajax({
-            type: 'GET',
-            url: contextPath+`/comment/${bno}`,
-            dataType: 'json',
-            success: function(comments) {
-                const $list = $("#commentList");
-                $list.empty();
-                if (comments.length === 0) {
-                    $list.append("<p>댓글이 없습니다.</p>");
-                    return;
-                }
-                comments.forEach(c => {
-                    const html = `
-                        <div class="comment">
-                            <strong>`+c.commenter+`</strong>
-                            <small>`+c.reg_date+`</small>
-                            <p>`+c.comment+`</p>
-                        </div>`
-                    ;
-                    $list.append(html);
-                });
-            },
-            error: function() {
-                alert("댓글을 불러오는 중 오류가 발생했습니다.");
-            }
-        });
-    }
-
-    // 페이지 로딩 시 댓글 불러오기
-    $(document).ready(function() {
-        loadComments();
-    });
-
+    //게시글 삭제
     $("#removeBtn").on("click", function(){
         if(!confirm("정말 삭제하시겠습니까?")) return;
         <%--location.href = "${pageContext.request.contextPath}/board/remove/${board.bno}";--%>
@@ -98,14 +64,59 @@
             error: function(err){ alert(err); }
         });
     });
-
+    //게시글 수정
     $("#modifyBtn").on("click", function(){
         location.href = contextPath+"/board/modify/${board.bno}";
     });
-
+    //목록으로 이동
     $("#listBtn").on("click", function(){
         location.href = contextPath+"/board/list";
     });
+
+    //페이지 로딩 시 댓글 불러오기
+    $(document).ready(function() {
+        loadComments();
+    });
+    //댓글 조회
+    function loadComments() {
+        $.ajax({
+            type: 'GET',
+            url: contextPath+`/comments/${bno}`,
+            dataType: 'json',
+            success: function(comments) {
+                const $list = $("#commentList");
+                $list.empty();
+                if (comments.length === 0) {
+                    $list.append("<p>댓글이 없습니다.</p>");
+                    return;
+                }
+                comments.forEach(function(c) {
+                    var html = '<div class="comment" data-cno="' + c.cno + '">' +
+                        '<strong>' + c.commenter + '</strong>' +
+                        '<small>' + c.reg_date + '</small>' +
+                        '<p>' + c.comment + '</p>';
+
+                    if(sessionId === c.commenter){
+                        html += '<button class="editBtn btn">수정</button>' +
+                            '<button class="deleteBtn btn">삭제</button>';
+                    }
+
+                    html += '<button class="replyBtn btn">답글</button>';
+
+                    html += '</div>';
+                    if(!c.pcno) {
+                        $list.append(html);
+                    } else {
+                        $list.find("[data-cno='"+c.pcno+"']").append('<div class="reply">'+html+'</div>');
+                    }
+                });
+            },
+            error: function() {
+                alert("댓글을 불러오는 중 오류가 발생했습니다.");
+            }
+        });
+    }
+    //댓글 작성
     $("#commentBtn").on("click", function() {
         const sessionId = "${sessionScope.id}";
         const content = $("#commentContent").val().trim();
@@ -122,9 +133,91 @@
 
         const data = {
             bno: "${board.bno}",
+            pcno: null,
             comment: content,
             commenter: sessionId
         };
+
+        $.ajax({
+            type: 'POST',
+            url: contextPath+`/comments/${bno}`,
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=UTF-8",
+            success: function (msg){
+                alert(msg);
+                location.reload();
+            },
+            error: function (err){ alert(err); }
+        })
+    });
+    //댓글 수정 버튼
+    $(document).on("click", ".editBtn", function(){
+        const $commentDiv = $(this).closest(".comment");
+        const currentContent = $commentDiv.find("p").text();
+
+        $commentDiv.data("original", currentContent); //원래 내용
+
+        // 댓글 내용을 textarea로 교체
+        $commentDiv.find("p").replaceWith('<textarea class="editContent">' + currentContent + '</textarea>');
+
+        // 버튼 텍스트 변경
+        $(this).text("저장").removeClass("editBtn").addClass("saveBtn");
+        $commentDiv.find(".deleteBtn").text("취소").removeClass("deleteBtn").addClass("cancelBtn");
+    });
+    //댓글 수정 내용 저장
+    $(document).on("click",".saveBtn", function (){
+        const $commentDiv = $(this).closest(".comment");
+        const cno = $commentDiv.data("cno");
+        const newContent = $commentDiv.find(".editContent").val().trim();
+
+        if(!newContent){
+            alert("댓글 내용을 입력해주세요.");
+            return;
+        }
+
+        const data = {
+            cno: cno,
+            comment: newContent,
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: contextPath+"/comments/modify",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=UTF-8",
+            success: function (msg){
+                alert(msg);
+                loadComments();
+            },
+            error: function (err){alert(err);}
+        });
+    });
+    //댓글 취소 버튼
+    $(document).on("click", ".cancelBtn", function(){
+        const $commentDiv = $(this).closest(".comment");
+        const originalContent = $commentDiv.data("original");
+
+        // textarea를 원래 p로 복원
+        $commentDiv.find(".editContent").replaceWith('<p>' + originalContent + '</p>');
+
+        $commentDiv.find(".saveBtn").text("수정").removeClass("saveBtn").addClass("editBtn");
+        $(this).text("삭제").removeClass("cancelBtn").addClass("deleteBtn");
+    });
+
+    //대댓글 버튼
+    $(document).on("click", ".replyBtn", function(){
+        const $commentDiv = $(this).closest(".comment");
+
+        if($commentDiv.find(".reply-form").length > 0) return;
+
+        const replyForm = `
+        <div class="reply-form">
+            <textarea class="replyContent" placeholder="답글을 입력하세요"></textarea><br>
+            <button class="replySubmit btn">등록</button>
+            <button class="replyCancel btn">취소</button>
+        </div>
+    `;
+        $commentDiv.append(replyForm);
     });
 
 </script>

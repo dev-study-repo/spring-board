@@ -16,4 +16,14 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDto> getCommentList(Integer bno) throws Exception {
         return commentDao.selectAll(bno);
     }
+
+    @Override //댓글 작성
+    public void insertComment(CommentDto commentDto) throws Exception {
+        commentDao.insert(commentDto);
+    }
+
+    @Override //댓글 수정
+    public void updateComment(CommentDto commentDto) throws Exception {
+        commentDao.update(commentDto);
+    }
 }

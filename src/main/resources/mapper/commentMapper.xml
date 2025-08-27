@@ -7,9 +7,23 @@
         FROM comment
     </sql>
     <!-- 해당 게시글의 댓글 조회 -->
-    <select id="selectComment" parameterType="int" resultType="CommentDto">
+    <select id="selectAll" parameterType="int" resultType="CommentDto">
         <include refid="selectFromComment"/>
-        WHERE pcno is null and bno = #{bno}
+        WHERE bno = #{bno}
     </select>
+    <!-- 댓글 작성 -->
+    <insert id="insert" parameterType="CommentDto">
+        INSERT INTO comment
+            (bno, pcno, comment, commenter)
+        VALUES
+            (#{bno}, #{pcno},#{comment},#{commenter});
+    </insert>
+    <!-- 댓글 수정 -->
+    <update id="update" parameterType="CommentDto">
+        UPDATE comment
+        SET
+            comment = #{comment}
+        WHERE cno = #{cno};
+    </update>
 
 </mapper>
