@@ -11,8 +11,9 @@ public interface BoardDao {
     int count() throws Exception; //전체 게시글 수
     int insert(BoardDto dto) throws Exception; //게시글 작성
     int delete(Integer bno) throws Exception; //게시글 삭제
+    int update(BoardDto dto) throws Exception; //게시글 수정
 
-//    int update(BoardDto dto) throws Exception;
+
 //    int increaseViewCnt(Integer bno) throws Exception;
 
 //    int deleteAll() throws Exception;

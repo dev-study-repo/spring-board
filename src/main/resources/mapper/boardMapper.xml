@@ -44,15 +44,7 @@
         DELETE FROM board WHERE bno = #{bno}
     </delete>
 
-
-    <delete id="deleteAll">
-        DELETE FROM board
-    </delete>
-
-
-
-
-
+    <!-- 게시글 수정 -->
     <update id="update" parameterType="BoardDto">
         UPDATE board
         SET   title = #{title}
@@ -60,6 +52,13 @@
           , up_date = now()
         WHERE bno = #{bno}
     </update>
+
+
+
+
+    <delete id="deleteAll">
+        DELETE FROM board
+    </delete>
 
     <update id="updateCommentCnt" parameterType="map">
         UPDATE board

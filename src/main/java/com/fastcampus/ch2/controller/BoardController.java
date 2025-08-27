@@ -50,12 +50,13 @@ public class BoardController {
         return "boardWrite";
     }
     @PostMapping(value = "/write", produces = "text/plain;charset=UTF-8") //게시글 작성
-    public ResponseEntity<String> writeBoard(@RequestBody BoardDto boardDto, HttpSession session) throws Exception {
+    public ResponseEntity<String> writeBoard(@RequestBody BoardDto boardDto) throws Exception {
         try {
             BoardDto board = new BoardDto();
             board.setTitle(boardDto.getTitle());
             board.setContent(boardDto.getContent());
-            board.setWriter(boardDto.getWriter());
+            UserDto userDto = userService.getUserById(boardDto.getWriter());
+            board.setWriter(userDto.getName());
 
             boardService.insertBoard(board);
             return ResponseEntity.ok("게시글 등록이 완료되었습니다.");
@@ -82,4 +83,22 @@ public class BoardController {
                     .body("삭제 중 오류가 발생했습니다.");
         }
     }
+
+    @PostMapping(value = "modify/{bno}", produces = "text/plain;charset=UTF-8")
+    public ResponseEntity<String> modifyBoard(@PathVariable int bno, @RequestBody BoardDto boardDto) throws Exception {
+        try {
+            BoardDto board = new BoardDto();
+            board.setBno(bno);
+            board.setTitle(boardDto.getTitle());
+            board.setContent(boardDto.getContent());
+
+            boardService.updateBoard(board);
+            return ResponseEntity.ok("게시글 수정이 완료되었습니다.");
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("게시글 수정 중 오류가 발생했습니다.");
+        }
+    }
+
 }

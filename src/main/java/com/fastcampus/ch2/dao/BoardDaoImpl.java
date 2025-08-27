@@ -44,6 +44,12 @@ public class BoardDaoImpl implements BoardDao {
         return session.delete(namespace+"delete", bno);
     }
 
+    @Override //개시글 수정
+    public int update(BoardDto dto) throws Exception {
+        return session.update(namespace+"update", dto);
+    }
+
+
 //    @Override
 //    public int deleteAll() {
 //        return session.delete(namespace+"deleteAll");

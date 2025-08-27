@@ -71,19 +71,17 @@
             content: $("#content").val(),
             writer: writer
         };
-        if(formCheck()){
-            $.ajax({
-                type:'POST',
-                url: 'write',
-                data: JSON.stringify(data),
-                contentType: 'application/json; charset=UTF-8',
-                success: function (msg){
-                    alert(msg);
-                    location.href = "${pageContext.request.contextPath}/board/list";
-                },
-                error: function (err){ alert(err);}
-            })
-        }
+        $.ajax({
+            type:'POST',
+            url: 'write',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=UTF-8',
+            success: function (msg){
+                alert(msg);
+                location.href = "${pageContext.request.contextPath}/board/list";
+            },
+            error: function (err){ alert(err);}
+        })
     });
 
     $("#listBtn").on("click", function(){

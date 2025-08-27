@@ -33,10 +33,10 @@
 <div class="container">
     <h2>게시글 수정</h2>
     <form id="form" class="frm" method="post">
-        <input type="hidden" name="bno" value="${board.bno}">
-        <input type="text" name="title" value="${board.title}">
-        <input type="text" name="writer" value="${board.writer}" readonly>
-        <textarea name="content">${board.content}</textarea>
+        <input type="hidden" name="bno" id="bno" value="${board.bno}">
+        <input type="text" name="title" id="title" value="${board.title}">
+        <input type="text" name="writer" id="writer" value="${board.writer}" readonly>
+        <textarea name="content" id="content">${board.content}</textarea>
 
         <div class="btn-group">
             <button type="button" id="modifyBtn" class="btn"><i class="fa fa-pencil"></i> 수정</button>
@@ -54,10 +54,22 @@
     }
 
     $("#modifyBtn").on("click", function(){
-        const form = $("#form");
-        form.attr("action", "${pageContext.request.contextPath}/board/modify");
-        form.attr("method", "post");
-        if(formCheck()) form.submit();
+        if(!formCheck())return;
+        const data = {
+            title: $("#title").val(),
+            content: $("#content").val()
+        }
+        $.ajax({
+            type: 'POST',
+            url: './${board.bno}',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=UTF-8',
+            success: function (msg){
+                alert(msg);
+                location.href = "${pageContext.request.contextPath}/board/${board.bno}";
+            },
+            error: function (err){ alert(err); }
+        })
     });
 
     $("#listBtn").on("click", function(){

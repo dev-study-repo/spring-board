@@ -12,4 +12,5 @@ public interface BoardService {
     int countAllBoards() throws Exception; //전체 게시글 수
     int insertBoard(BoardDto boardDto) throws Exception; //게시글 작성
     int deleteBoard(int bno) throws Exception; //게시글 삭제
+    void updateBoard(BoardDto boardDto) throws Exception; //게시글 수정
 }

@@ -31,6 +31,20 @@
         <button type="button" id="removeBtn" class="btn">삭제</button>
         <button type="button" id="listBtn" class="btn">목록</button>
     </div>
+    <div class="comment-section">
+        <h3>댓글</h3>
+        <div id="commentList"></div>
+
+        <c:if test="${not empty sessionScope.id}">
+            <div class="comment-form">
+                <textarea id="commentContent" placeholder="댓글을 입력하세요"></textarea>
+                <button type="button" id="commentBtn">등록</button>
+            </div>
+        </c:if>
+        <c:if test="${empty sessionScope.id}">
+            <p>로그인 후 댓글을 작성할 수 있습니다.</p>
+        </c:if>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
