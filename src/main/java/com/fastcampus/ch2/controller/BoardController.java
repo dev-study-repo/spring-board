@@ -1,8 +1,10 @@
 package com.fastcampus.ch2.controller;
 
 import com.fastcampus.ch2.domain.BoardDto;
+import com.fastcampus.ch2.domain.CommentDto;
 import com.fastcampus.ch2.domain.UserDto;
 import com.fastcampus.ch2.service.BoardService;
+import com.fastcampus.ch2.service.CommentService;
 import com.fastcampus.ch2.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -22,6 +25,9 @@ public class BoardController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/list") //게시글 전체 조회
     public String list(@RequestParam(defaultValue = "1") int page, Model model) throws Exception {
@@ -42,6 +48,8 @@ public class BoardController {
     public String detailBoard(@PathVariable int bno, Model model) throws Exception {
         BoardDto board = boardService.getBoard(bno);
         model.addAttribute("board", board);
+        List<CommentDto> comments = commentService.getCommentList(bno);
+        model.addAttribute("comments", comments);
         return "board";
     }
 
