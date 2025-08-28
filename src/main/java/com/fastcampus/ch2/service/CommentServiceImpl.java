@@ -26,4 +26,9 @@ public class CommentServiceImpl implements CommentService {
     public void updateComment(CommentDto commentDto) throws Exception {
         commentDao.update(commentDto);
     }
+
+    @Override //댓글 삭제
+    public void deleteComment(Integer cno) throws Exception {
+        commentDao.delete(cno);
+    }
 }

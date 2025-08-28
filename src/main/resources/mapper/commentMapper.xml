@@ -25,5 +25,9 @@
             comment = #{comment}
         WHERE cno = #{cno};
     </update>
+    <!-- 댓글 삭제 -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM comment WHERE cno = #{cno};
+    </delete>
 
 </mapper>

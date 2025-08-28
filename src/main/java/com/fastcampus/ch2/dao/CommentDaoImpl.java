@@ -27,4 +27,9 @@ public class CommentDaoImpl implements CommentDao {
     public void update(CommentDto commentDto) throws Exception {
         session.update(namespace + "update", commentDto);
     }
+
+    @Override //댓글 삭제
+    public void delete(Integer cno) throws Exception {
+        session.delete(namespace + "delete", cno);
+    }
 }

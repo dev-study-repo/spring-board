@@ -94,16 +94,16 @@
                     var html = '<div class="comment" data-cno="' + c.cno + '">' +
                         '<strong>' + c.commenter + '</strong>' +
                         '<small>' + c.reg_date + '</small>' +
-                        '<p>' + c.comment + '</p>';
+                        '<p>' + c.comment + '</p>' +
+                        '<div class="btn-group">';
 
                     if(sessionId === c.commenter){
                         html += '<button class="editBtn btn">수정</button>' +
                             '<button class="deleteBtn btn">삭제</button>';
                     }
 
-                    html += '<button class="replyBtn btn">답글</button>';
+                    html += '<button class="replyBtn btn">답글</button></div></div>';
 
-                    html += '</div>';
                     if(!c.pcno) {
                         $list.append(html);
                     } else {
@@ -118,7 +118,6 @@
     }
     //댓글 작성
     $("#commentBtn").on("click", function() {
-        const sessionId = "${sessionScope.id}";
         const content = $("#commentContent").val().trim();
 
         if (!content) {
@@ -203,6 +202,21 @@
         $commentDiv.find(".saveBtn").text("수정").removeClass("saveBtn").addClass("editBtn");
         $(this).text("삭제").removeClass("cancelBtn").addClass("deleteBtn");
     });
+    //댓글 삭제 버튼
+    $(document).on("click",".deleteBtn", function (){
+        const $commentDiv = $(this).closest(".comment");
+        const cno = $commentDiv.data("cno");
+        if(!confirm("댓글을 삭제하시겠습니까?")) return;
+        $.ajax({
+            type:'DELETE',
+            url: contextPath+"/comments/"+cno,
+            success: function (msg){
+                alert(msg);
+                loadComments();
+            },
+            error: function (err){ alert(err); }
+        });
+    });
 
     //대댓글 버튼
     $(document).on("click", ".replyBtn", function(){
@@ -218,6 +232,45 @@
         </div>
     `;
         $commentDiv.append(replyForm);
+    });
+    //대댓글 등록
+    $(document).on("click", ".replySubmit", function (){
+        const $replyForm = $(this).closest(".reply-form");
+        const content = $replyForm.find(".replyContent").val().trim();
+        const $commentDiv = $(this).closest(".comment");
+        const pcno = $commentDiv.data("cno");
+
+        if(!content){
+            alert("답글 내용을 입력해주세요.");
+            return;
+        }
+        if(!sessionId){
+            alert("로그인이 필요합니다.");
+            return;
+        }
+
+        const data = {
+            bno: bno,
+            pcno: pcno,
+            comment: content,
+            commenter: sessionId
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: contextPath+'/comments/'+bno,
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=UTF-8",
+            success: function (msg){
+                alert(msg);
+                loadComments();
+            },
+            error: function (err){ alert(err); }
+        })
+    });
+    //대댓글 취소
+    $(document).on("click", ".replyCancel", function(){
+        $(this).closest(".reply-form").remove();
     });
 
 </script>
